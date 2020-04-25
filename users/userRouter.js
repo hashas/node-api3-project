@@ -65,20 +65,60 @@ router.get('/', (req, res) => {
     })
 });
 
+// READ single user
 router.get('/:id', validateUserId, (req, res) => {
   // do your magic!
+  (req.user) ? res.status(200).json(req.user) : res.status(404).json(`User not found`)
 });
 
 router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
+  users.getUserPosts(req.params.id)
+    .then(p => {
+      res.status(200).json(p)
+    })
+    .catch(err => {
+      res.status(404).json({ 
+        error: `Posts not found` 
+      })
+    })
 });
 
 router.delete('/:id', validateUserId, (req, res) => {
   // do your magic!
+  users.remove(req.params.id)
+    .then(user => {
+      res.status(200).json({
+        message: "The user has been deleted"
+      })
+    })
+    .catch(err => {
+      res.status(501).json({
+        error: "The user was NOT deleted"
+      })
+    })
 });
 
 router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
+  users.update(req.params.id, req.body)
+    .then(count => {
+      if (count === 1) {
+        // if I want to display the updated user I'd need to call users.getById w/ then/catch
+        res.status(200).json({
+          message: "The user was updated successfully"
+        })
+      } else {
+        res.status(501).json({
+          error: "The update was not implemented"
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: "The update was not implemented"
+      })
+    })
 });
 
 //custom middleware
