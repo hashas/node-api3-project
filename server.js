@@ -13,7 +13,7 @@ server.use('/api/users/', userRouter);
 // will end our request before we get to custom
 // middleware so have commented it out
 server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
+  res.send(process.env.SECRET || `<h2>Let's write some middleware!</h2>`);
 });
 
 //custom middleware
